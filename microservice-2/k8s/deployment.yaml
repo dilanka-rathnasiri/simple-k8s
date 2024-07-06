@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: microservice-2-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: microservice-2
@@ -16,4 +16,4 @@ spec:
         - name: microservice-2
           image: dilankarathnasiri/spring-k8s:microservice-2
           ports:
-            - containerPort: 5000
+            - containerPort: 5001

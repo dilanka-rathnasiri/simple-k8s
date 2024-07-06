@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: microservice-1-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: microservice-1

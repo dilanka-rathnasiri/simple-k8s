@@ -16,7 +16,7 @@ public class Controller2 {
 
     @GetMapping("/microservice-2")
     public String getMessage(){
-        this.webClient = WebClient.builder().baseUrl("http://localhost:5000").build();
+        this.webClient = WebClient.builder().baseUrl("http://microservice-1-service").build();
         String service1Msg = webClient.get()
                 .uri("/microservice-1")
                 .retrieve()
