@@ -1,5 +1,5 @@
 {
-    "name": "microservice-1-k8s",
+    "name": "microservice-2-k8s",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^18",
