@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: admin-user
+  name: monitoring-user
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: view
 subjects:
 - kind: ServiceAccount
-  name: admin-user
+  name: monitoring-user
   namespace: kubernetes-dashboard
