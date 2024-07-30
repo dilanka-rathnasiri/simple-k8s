@@ -17,3 +17,9 @@ An example of a simple Kubernetes cluster built with kind.
 6. Deploy microservice-1 on kubernetes with `pulumi up`
 7. Navigate into `iac/microservice-2-k8s`
 8. Deploy microservice-2 on kubernetes with `pulumi up`
+
+### How to access kubernetes dashboard
+1. Get monitoring-user access token with `kubectl get secret monitoring-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d`
+2. Start port forwarding with `kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
+3. Open localhost:8443 on a web browser
+4. Enter `Bearer <access token>` for the bearer token and log into dashboard
