@@ -1,5 +1,5 @@
 {
-    "name": "microservice-2-k8s",
+    "name": "app-deployment",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^18",
@@ -7,7 +7,6 @@
     },
     "dependencies": {
         "@pulumi/kubernetes": "^4.0.0",
-        "@pulumi/pulumi": "^3.113.0",
-        "k8s-deployment": "file:../k8s-deployment"
+        "@pulumi/pulumi": "^3.113.0"
     }
 }

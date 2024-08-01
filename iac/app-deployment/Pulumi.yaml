@@ -1,4 +1,4 @@
-name: microservice-1-k8s
+name: app-deployment
 runtime:
   name: nodejs
   options:
