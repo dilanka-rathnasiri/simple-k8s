@@ -25,7 +25,7 @@ Also, [minikube](https://minikube.sigs.k8s.io/docs/) can be used.
 ### How to deploy Kubernetes dashboard
 
 1. Navigate into `iac/k8s-dashboard`
-2. execute `pulumi install --local` in terminal
+2. execute `pulumi login --local` in terminal
 3. execute `pulumi install` in terminal
 4. execute `export PULUMI_CONFIG_PASSPHRASE=<your passphrase>` in terminal
 5. execute `pulumi stack init <stack name>` in terminal
