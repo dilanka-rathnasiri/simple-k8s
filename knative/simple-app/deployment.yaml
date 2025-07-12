@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: simple-deploy
+  name: simple-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-deploy
+  template:
+    metadata:
+      labels:
+        app: simple-deploy
+    spec:
+      containers:
+      - image: dilankarathnasiri/simple-web-server
+        name: simple-web-server
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: SERVER_PORT
+          value: "5000"
+        ports:
+        - containerPort: 5000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: simple-deploy
+  name: simple-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: simple-deploy

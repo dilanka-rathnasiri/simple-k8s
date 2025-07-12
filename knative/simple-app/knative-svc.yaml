@@ -1,0 +1,19 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: simple-knative-svc
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/scale-to-zero-pod-retention-period: "1s"
+    spec:
+      containers:
+      - image: dilankarathnasiri/simple-web-server
+        name: simple-web-server
+        env:
+        - name: SERVER_PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
