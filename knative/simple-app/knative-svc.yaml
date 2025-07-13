@@ -10,16 +10,23 @@ spec:
         autoscaling.knative.dev/scale-to-zero-pod-retention-period: "1s"
     spec:
       containers:
-      - image: dilankarathnasiri/simple-web-server
-        name: simple-web-server
-        env:
-        - name: SERVER_PORT
-          value: "8080"
-        ports:
-        - containerPort: 8080
-
+        - image: dilankarathnasiri/simple-web-server
+          name: simple-web-server
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+          ports:
+            - containerPort: 8080
+          securityContext:
+            runAsUser: 7
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
 ---
-
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
@@ -37,6 +44,6 @@ spec:
         - name: kourier
           port: 80
       filters:
-      - type: URLRewrite
-        urlRewrite:
-          hostname: "simple-knative-svc.default.example.com"
+        - type: URLRewrite
+          urlRewrite:
+            hostname: "simple-knative-svc.default.example.com"
