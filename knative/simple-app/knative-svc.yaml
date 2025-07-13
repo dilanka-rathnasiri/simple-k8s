@@ -36,9 +36,7 @@ spec:
       backendRefs:
         - name: kourier
           port: 80
-      # filters:
-      # - type: RequestHeaderModifier
-      #   requestHeaderModifier:
-      #     set:
-      #     - name: Host
-      #       value: simple-knative-svc.default.example.com
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          hostname: "simple-knative-svc.default.example.com"
