@@ -29,6 +29,13 @@ kubectl patch svc/kourier \
 echo "Get kourier service"
 kubectl --namespace kourier-system get service kourier
 
+# Setup dns
+echo "Setup dns"
+kubectl patch configmap/config-domain \
+      --namespace knative-serving \
+      --type merge \
+      --patch '{"data":{"example.com":""}}'
+
 # enable knative hpa
 echo "enable knative hpa"
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-hpa.yaml
