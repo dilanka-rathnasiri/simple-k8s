@@ -37,5 +37,5 @@ kubectl patch configmap/config-domain \
       --patch '{"data":{"example.com":""}}'
 
 # enable knative hpa
-echo "enable knative hpa"
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-hpa.yaml
+# echo "enable knative hpa"
+# kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-hpa.yaml
