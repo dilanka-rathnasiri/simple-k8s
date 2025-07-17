@@ -1,0 +1,78 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy-gw
+  namespace: envoy-gw
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+
+---
+
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-gw-proxy-config
+  namespace: envoy-gw
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        name: envoy-api-gw
+        type: ClusterIP
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: envoy-gw
+  namespace: envoy-gw
+spec:
+  gatewayClassName: envoy-gw
+  infrastructure:
+    parametersRef:
+        group: gateway.envoyproxy.io
+        kind: EnvoyProxy
+        name: envoy-gw-proxy-config
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+
+---
+
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: direct-response-inline
+  namespace: envoy-gw
+spec:
+  directResponse:
+    contentType: text/plain
+    statusCode: 200
+    body:
+      type: Inline
+      inline: "ok"
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: health-route
+  namespace: envoy-gw
+spec:
+  parentRefs:
+    - name: eg
+  rules:
+  - matches:
+    - path:
+        type: Exact
+        value: /health
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.envoyproxy.io
+        kind: HTTPRouteFilter
+        name: direct-response-inline
