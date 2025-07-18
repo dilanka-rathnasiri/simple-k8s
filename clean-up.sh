@@ -1,7 +1,11 @@
 #!/bin/bash
 
+echo "delete web app"
+cd app-deployment
+sh remove-app.sh
+
 echo "remove knative"
-cd knative
+cd ../knative
 sh remove-knative.sh
 
 echo "remove envoy-gw"
