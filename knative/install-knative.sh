@@ -11,7 +11,12 @@ echo "setup knative serving with kourier"
 kubectl apply -f knative-configs.yaml
 
 echo "allow traffic from envoy-gw to kourier"
-kubectl apply -f reference-grant.yaml
+kubectl apply -f kourier-reference-grant.yaml
 
-echo "wait for knative serving to be ready"
-kubectl wait --for=condition=Available --timeout=300s deployment --all -n knative-serving
+echo "wait for kourier gateway to be ready"
+cd kourier-wait
+python3 -m venv venv
+. venv/bin/activate
+pip3 install -r -q requirements.txt
+python3 main.py
+cd ..

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "delete reference grant"
-kubectl delete -f reference-grant.yaml
+kubectl delete -f app-reference-grant.yaml
 
 echo "delete knative web app"
 kubectl delete -f app-ksvc.yaml
