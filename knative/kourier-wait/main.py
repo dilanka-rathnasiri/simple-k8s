@@ -22,10 +22,10 @@ def main():
 
     # wait until kourier gateway is ready
     while not (is_kourier_gateway_ready(app_v1_api)):
-        print("kourier gateway isn't ready yet")
+        print("******* kourier gateway isn't ready yet *******")
         time.sleep(5)
 
-    print("kourier gateway is ready")
+    print("******* kourier gateway is ready *******")
 
 
 if __name__ == "__main__":

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "delete reference grant"
+echo "******* delete reference grant *******"
 kubectl delete -f kourier-reference-grant.yaml
 
-echo "delete knative serving"
+echo "******* delete knative serving *******"
 kubectl delete -f knative-configs.yaml
 
-echo "uninstall knative"
+echo "******* uninstall knative *******"
 helm uninstall -n knative-operator knative-operator
 
-echo "delete knative operator namespace"
+echo "******* delete knative operator namespace *******"
 kubectl delete -f knative-ns.yaml

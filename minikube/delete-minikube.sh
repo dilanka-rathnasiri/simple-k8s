@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "delete minikube cluster"
+echo "******* delete minikube cluster *******"
 minikube delete

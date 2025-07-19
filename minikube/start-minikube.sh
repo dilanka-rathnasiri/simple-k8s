@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "start minikube cluster"
+echo "******* start minikube cluster *******"
 minikube start
