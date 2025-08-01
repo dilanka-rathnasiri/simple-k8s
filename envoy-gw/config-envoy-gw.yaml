@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: eg
-  namespace: kourier-system
+  name: envoy-gw
+  namespace: envoy-gw
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
@@ -11,8 +11,8 @@ spec:
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: custom-proxy-config
-  namespace: kourier-system
+  name: envoy-gw-proxy-config
+  namespace: envoy-gw
 spec:
   provider:
     type: Kubernetes
@@ -26,15 +26,15 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: eg
-  namespace: kourier-system
+  name: envoy-gw
+  namespace: envoy-gw
 spec:
-  gatewayClassName: eg
+  gatewayClassName: envoy-gw
   infrastructure:
     parametersRef:
         group: gateway.envoyproxy.io
         kind: EnvoyProxy
-        name: custom-proxy-config
+        name: envoy-gw-proxy-config
   listeners:
     - name: http
       protocol: HTTP
@@ -45,8 +45,8 @@ spec:
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: HTTPRouteFilter
 metadata:
-  name: direct-response-inline
-  namespace: kourier-system
+  name: health-inline-response
+  namespace: envoy-gw
 spec:
   directResponse:
     contentType: text/plain
@@ -61,18 +61,55 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: health-route
-  namespace: kourier-system
+  namespace: envoy-gw
 spec:
   parentRefs:
-    - name: eg
+    - name: envoy-gw
   rules:
   - matches:
     - path:
-        type: PathPrefix
-        value: /health
+        type: Exact
+        value: "/health"
     filters:
     - type: ExtensionRef
       extensionRef:
         group: gateway.envoyproxy.io
         kind: HTTPRouteFilter
-        name: direct-response-inline
+        name: health-inline-response
+
+---
+
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: default-inline-response
+  namespace: envoy-gw
+spec:
+  directResponse:
+    contentType: text/plain
+    statusCode: 400
+    body:
+      type: Inline
+      inline: "Path not found"
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: default-route
+  namespace: envoy-gw
+spec:
+  parentRefs:
+    - name: envoy-gw
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: "/"
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.envoyproxy.io
+        kind: HTTPRouteFilter
+        name: default-inline-response

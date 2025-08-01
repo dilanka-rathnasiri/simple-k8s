@@ -1,22 +1,19 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: simple-knative-svc
+  name: web-app-knative-svc
+  namespace: app
 spec:
   template:
-    metadata:
-      annotations:
-        autoscaling.knative.dev/minScale: "0"
-        autoscaling.knative.dev/scale-to-zero-pod-retention-period: "1s"
     spec:
       containers:
         - image: dilankarathnasiri/simple-web-server
           name: simple-web-server
           env:
             - name: SERVER_PORT
-              value: "8080"
+              value: "5000"
           ports:
-            - containerPort: 8080
+            - containerPort: 5000
           securityContext:
             runAsUser: 7
             allowPrivilegeEscalation: false
@@ -26,24 +23,30 @@ spec:
             capabilities:
               drop:
                 - ALL
+
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
+
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: simple-knative-http-route
-  namespace: kourier-system
+  name: web-app-knative-http-route
+  namespace: envoy-gw
 spec:
   parentRefs:
-    - name: eg
+    - name: envoy-gw
   rules:
     - matches:
         - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: kourier
-          port: 80
+            type: Exact
+            value: "/web-app-knative-svc"
       filters:
         - type: URLRewrite
           urlRewrite:
-            hostname: "simple-knative-svc.default.example.com"
+            hostname: "web-app-knative-svc.app.example.com"
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: "/"
+      backendRefs:
+        - name: kourier
+          port: 80
+          namespace: knative-serving

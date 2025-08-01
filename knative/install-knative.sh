@@ -1,41 +1,22 @@
 #!/bin/bash
 
-# install knative serving crds
-echo "install knative serving crds"
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-crds.yaml
+echo "******* create knative operator namespace *******"
+kubectl apply -f knative-ns.yaml
 
-# install knative serving core components
-echo "install knative serving core components"
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-core.yaml
+echo "******* install knative *******"
+helm repo add knative-operator https://knative.github.io/operator
+helm upgrade -i knative-operator -n knative-operator knative-operator/knative-operator
 
-# install kourier
-echo "install kourier"
-kubectl apply -f https://github.com/knative/net-kourier/releases/download/knative-v1.18.0/kourier.yaml
+echo "******* setup knative serving with kourier *******"
+kubectl apply -f knative-configs.yaml
 
-# change knative serving default to kourier
-echo "change knative serving default to kourier"
-kubectl patch configmap/config-network \
-  --namespace knative-serving \
-  --type merge \
-  --patch '{"data":{"ingress-class":"kourier.ingress.networking.knative.dev"}}'
+echo "******* allow traffic from envoy-gw to kourier *******"
+kubectl apply -f kourier-reference-grant.yaml
 
-# change kourier service to cluster ip
-echo "change kourier service to cluster ip"
-kubectl patch svc/kourier \
-   --namespace kourier-system \
-   --patch '{"spec": {"type": "ClusterIP"}}'
-
-# Get kourier service
-echo "Get kourier service"
-kubectl --namespace kourier-system get service kourier
-
-# Setup dns
-echo "Setup dns"
-kubectl patch configmap/config-domain \
-      --namespace knative-serving \
-      --type merge \
-      --patch '{"data":{"example.com":""}}'
-
-# enable knative hpa
-echo "enable knative hpa"
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.1/serving-hpa.yaml
+echo "******* wait for kourier gateway to be ready *******"
+cd kourier-wait
+python3 -m venv venv
+. venv/bin/activate
+pip3 install -r requirements.txt
+python3 main.py
+cd ..
