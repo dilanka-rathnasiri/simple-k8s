@@ -25,14 +25,15 @@ spec:
                 - ALL
 
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
+
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: web-app-knative-http-route
-  namespace: app
+  namespace: envoy-gw
 spec:
   parentRefs:
-    - name: envoy-gateway
+    - name: envoy-gw
   rules:
     - matches:
         - path:
@@ -48,3 +49,4 @@ spec:
       backendRefs:
         - name: kourier
           port: 80
+          namespace: knative-serving

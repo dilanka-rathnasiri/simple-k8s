@@ -64,7 +64,7 @@ metadata:
   namespace: envoy-gw
 spec:
   parentRefs:
-    - name: eg
+    - name: envoy-gw
   rules:
   - matches:
     - path:
