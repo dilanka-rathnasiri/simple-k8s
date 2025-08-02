@@ -10,7 +10,13 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /
+            value: "/dashboard"
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: "/"
       backendRefs:
         - name: kubernetes-dashboard
           port: 443
