@@ -8,21 +8,16 @@ dashboard:
 
 # Configure the service
 service:
-  type: NodePort
-  nodePort: 30001
-  externalPort: 443
+  type: ClusterIP  # Changed from NodePort to ClusterIP
+  # Removed nodePort as it's not needed for ClusterIP
+  port: 443
   targetPort: 8443
-  externalIPs: []
-  loadBalancerIP: ""
-  loadBalancerSourceRanges: []
+  # Removed externalIPs, loadBalancerIP, and loadBalancerSourceRanges as they're not needed for ClusterIP
   annotations: {}
 
-# Configure the ingress
+# Ingress is disabled as we're using ClusterIP with Envoy Gateway
 ingress:
   enabled: false
-  annotations: {}
-  hosts: []
-  tls: []
 
 # Configure the service account
 serviceAccount:

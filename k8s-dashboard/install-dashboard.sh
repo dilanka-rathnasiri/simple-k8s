@@ -12,3 +12,6 @@ helm upgrade -i kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
 
 echo "******* create admin user *******"
 kubectl apply -f monitoring-user.yaml
+
+echo "******* configure HTTPRoute for Envoy Gateway *******"
+kubectl apply -f k8s-dashboard-httproute.yaml
