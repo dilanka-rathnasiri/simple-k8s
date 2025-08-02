@@ -1,4 +1,3 @@
-# Enable or disable the dashboard UI
 dashboard:
   enabled: true
   containerPort: 8443
@@ -6,136 +5,11 @@ dashboard:
   enableSkip: false
   enableMetricsScraper: true
 
-# Configure the service
 service:
-  type: ClusterIP  # Changed from NodePort to ClusterIP
-  # Removed nodePort as it's not needed for ClusterIP
+  type: ClusterIP
   port: 443
   targetPort: 8443
-  # Removed externalIPs, loadBalancerIP, and loadBalancerSourceRanges as they're not needed for ClusterIP
   annotations: {}
 
-# Ingress is disabled as we're using ClusterIP with Envoy Gateway
 ingress:
   enabled: false
-
-# Configure the service account
-serviceAccount:
-  create: true
-  name: ""
-  annotations: {}
-
-# Configure the cluster role binding
-rbac:
-  create: true
-  clusterRoleMetrics: true
-  clusterReadOnlyRole: true
-
-# Configure the metrics scraper
-metricsScraper:
-  enabled: true
-
-# Configure the metrics server
-metricsServer:
-  enabled: true
-  hostNetwork: false
-  replicas: 1
-  updateStrategy: {}
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podLabels: {}
-  securityContext: {}
-  containerSecurityContext: {}
-  service:
-    type: ClusterIP
-    port: 8000
-    targetPort: 8000
-    nodePort: 30002
-    externalIPs: []
-    loadBalancerIP: ""
-    loadBalancerSourceRanges: []
-    annotations: {}
-  serviceAccount:
-    create: true
-    name: ""
-    annotations: {}
-  rbac:
-    create: true
-    clusterRoleMetrics: true
-    clusterReadOnlyRole: true
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: false
-      additionalLabels: {}
-      interval: 30s
-      scrapeTimeout: 10s
-      path: /metrics
-      port: 8000
-      scheme: http
-      tlsConfig: {}
-  securityContext: {}
-  containerSecurityContext: {}
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podLabels: {}
-  serviceAccount:
-    create: true
-    name: ""
-    annotations: {}
-  rbac:
-    create: true
-    clusterRoleMetrics: true
-    clusterReadOnlyRole: true
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: false
-      additionalLabels: {}
-      interval: 30s
-      scrapeTimeout: 10s
-      path: /metrics
-      port: 8000
-      scheme: http
-      tlsConfig: {}
-  securityContext: {}
-  containerSecurityContext: {}
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podLabels: {}
-  serviceAccount:
-    create: true
-    name: ""
-    annotations: {}
-  rbac:
-    create: true
-    clusterRoleMetrics: true
-    clusterReadOnlyRole: true
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: false
-      additionalLabels: {}
-      interval: 30s
-      scrapeTimeout: 10s
-      path: /metrics
-      port: 8000
-      scheme: http
-      tlsConfig: {}
-  securityContext: {}
-  containerSecurityContext: {}
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podLabels: {}

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "******* delete reference grant *******"
+kubectl delete -f dashboard-reference-grant.yaml
+
 echo "******* uninstall kubernetes dashboard *******"
 helm uninstall -n k8s-dashboard kubernetes-dashboard
 
