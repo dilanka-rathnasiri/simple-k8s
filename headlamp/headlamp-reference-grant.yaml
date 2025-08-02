@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
-  name: envoy-dashboard-reference-grant
-  namespace: k8s-dashboard
+  name: envoy-headlamp-reference-grant
+  namespace: headlamp
 spec:
   from:
     - group: gateway.networking.k8s.io
@@ -11,4 +11,4 @@ spec:
   to:
     - group: ""
       kind: Service
-      name: kubernetes-dashboard
+      name: headlamp

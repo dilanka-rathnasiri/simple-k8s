@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "******* get token *******"
-TOKEN=$(kubectl -n k8s-dashboard create token admin-user)
+TOKEN=$(kubectl -n headlamp create token headlamp)
 
 echo "******* token obtained *******"
 echo $TOKEN

@@ -1,3 +1,2 @@
-# Disable Kong proxy
-kong:
-  enabled: false
+config:
+  baseURL: /headlamp
