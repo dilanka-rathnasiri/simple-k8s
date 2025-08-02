@@ -17,7 +17,7 @@ spec:
             path:
               type: ReplaceFullPath
               replaceFullPath: "/headlamp/"
-      backendRefs:
+      backendRefs: &headlamp-backend
         - name: headlamp
           port: 80
           namespace: headlamp
@@ -25,7 +25,4 @@ spec:
         - path:
             type: PathPrefix
             value: "/headlamp"
-      backendRefs:
-        - name: headlamp
-          port: 80
-          namespace: headlamp
+      backendRefs: *headlamp-backend
