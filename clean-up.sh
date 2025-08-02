@@ -4,6 +4,10 @@ echo "******* delete web app *******"
 cd app-deployment
 sh remove-app.sh
 
+echo "******* remove headlamp *******"
+cd ../headlamp
+sh remove-headlamp.sh
+
 echo "******* remove knative *******"
 cd ../knative
 sh remove-knative.sh
