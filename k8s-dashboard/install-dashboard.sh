@@ -11,7 +11,7 @@ helm upgrade -i kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
   --values values.yaml
 
 echo "******* create admin user *******"
-kubectl apply -f monitoring-user.yaml
+kubectl apply -f admin-user.yaml
 
 echo "******* allow traffic from envoy-gw to dashboard *******"
 kubectl apply -f dashboard-reference-grant.yaml
