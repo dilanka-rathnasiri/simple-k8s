@@ -5,10 +5,10 @@ set -e
 
 # Set variables
 export NAMESPACE="kubernetes-dashboard"
-export SERVICE_ACCOUNT="admin-user"
+export SERVICE_ACCOUNT="monitoring-user"
 
 # Get the token
-TOKEN=$(kubectl -n kubernetes-dashboard create token admin-user)
+TOKEN=$(kubectl -n kubernetes-dashboard create token monitoring-user)
 
 # Display the token
 echo ""

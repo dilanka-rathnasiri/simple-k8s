@@ -1,13 +1,11 @@
 #!/bin/bash
 
-echo "******* add kubernetes dashboard helm repository *******"
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-helm repo update
-
 echo "******* create dashboard namespace *******"
 kubectl apply -f k8s-dashboard-ns.yaml
 
 echo "******* install kubernetes dashboard *******"
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+helm repo update
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
   --namespace kubernetes-dashboard \
   --values values.yaml \
@@ -15,7 +13,7 @@ helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dash
   --timeout 5m0s
 
 echo "******* create admin user *******"
-kubectl apply -f create-admin-user.yaml -n kubernetes-dashboard
+kubectl apply -f create-monitoring-user.yaml -n kubernetes-dashboard
 
 echo "******* kubernetes dashboard installed successfully *******"
 echo "To access the dashboard, run: kubectl proxy"
