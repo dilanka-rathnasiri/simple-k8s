@@ -5,7 +5,8 @@ kubectl apply -f knative-ns.yaml
 
 echo "******* install knative *******"
 helm repo add knative-operator https://knative.github.io/operator
-helm upgrade -i knative-operator -n knative-operator knative-operator/knative-operator
+helm repo update
+helm upgrade -i -n knative-operator knative-operator knative-operator/knative-operator
 
 echo "******* setup knative serving with kourier *******"
 kubectl apply -f knative-configs.yaml
