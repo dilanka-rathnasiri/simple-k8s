@@ -31,10 +31,6 @@ helm upgrade --install $HELM_RELEASE $HELM_REPO_NAME/$HELM_CHART \
 echo "Creating admin user..."
 kubectl apply -f create-admin-user.yaml -n $NAMESPACE
 
-# Get the token for the admin user
-echo "Retrieving admin token..."
-./get-token.sh
-
 echo "\nKubernetes Dashboard has been installed successfully!"
 echo "To access the dashboard, run: kubectl proxy"
 echo "Then open: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"

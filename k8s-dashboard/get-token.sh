@@ -4,11 +4,11 @@
 set -e
 
 # Set variables
-NAMESPACE="kubernetes-dashboard"
-SERVICE_ACCOUNT="admin-user"
+export NAMESPACE="kubernetes-dashboard"
+export SERVICE_ACCOUNT="admin-user"
 
 # Get the token
-TOKEN=$(kubectl -n $NAMESPACE get secret $(kubectl -n $NAMESPACE get sa/$SERVICE_ACCOUNT -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}")
+TOKEN=$(kubectl -n kubernetes-dashboard create token admin-user)
 
 # Display the token
 echo ""
