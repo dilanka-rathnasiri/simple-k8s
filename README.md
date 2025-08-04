@@ -1,70 +1,159 @@
 # Simple K8s
 
-Infrastructure as Code for deploying kubernetes dashboard and REST-API web services in a kubernetes cluster.
+A minimal, [Kubernetes](https://kubernetes.io/) cluster setup using Minikube to demonstrate essential tools for modern cloud native app development and deployment
 
-### How to use this project
+## 🚀 Stack Overview
 
-This is an example cluster with infrastructure as code.
-Feel free to change as you required and use for your projects.
+- **[Minikube](https://minikube.sigs.k8s.io/docs/):** Local Kubernetes cluster  
+- **[Helm](https://helm.sh/):** Kubernetes package manager  
+- **[Envoy Gateway](https://gateway.envoyproxy.io/):** Kubernetes native API Gateway  
+- **[Knative Serving](https://knative.dev/docs/):** Serverless platform with scale-to-zero support  
+- **[Headlamp](https://headlamp.dev/):** User-friendly Kubernetes dashboard  
 
-### This project consists of
+## 🧱 Project Structure
 
-1. source code for node.js web services
-2. Pulumi IaC for web service deployment
-    - two microservices has been deployed
-    - IaC for both kubernetes deployment and kubernetes service of each microservice
-3. Pulumi IaC for [Kubernetes dashboard](https://github.com/kubernetes/dashboard) deployment
-4. Pulumi IaC for a read-only user for accessing the kubernetes dashboard
-5. Pulumi IaC for a long-lived bearer token of the read-only user
+- `app-deployment/` — Sample application deployed as both a Kubernetes service and a Knative service  
+- `envoy-gw/` — Install and configure Envoy Gateway using Helm
+- `headlamp/` — Headlamp installation with Helm and routing setup
+- `knative/` — Install Knative Serving with Kourier ingress using knative-operator helm chart
+- `minikube/` — Minikube start/delete scripts  
+- `setup.sh` — Spin up the complete cluster  
+- `clean-up.sh` — Tear down everything  
 
-### Start a local Kubernetes cluster (Optional)
+## ✅ Cluster Features
 
-Start the local cluster with [kind](https://kind.sigs.k8s.io/) `kind create cluster --name simple-k8s`.
-Also, [minikube](https://minikube.sigs.k8s.io/docs/) can be used.
+- Envoy Gateway as API gateway  
+- Knative for serverless app deployment  
+- Headlamp for Kubernetes dashboard  
+- Sample app deployed in `app` namespace  
+- All HTTP routing via Envoy  
 
-### How to deploy Kubernetes dashboard
+## 🔗 Access Guide
 
-1. Navigate into `iac/k8s-dashboard`
-2. execute `pulumi login --local` in terminal
-3. execute `pulumi install` in terminal
-4. execute `export PULUMI_CONFIG_PASSPHRASE=<your passphrase>` in terminal
-5. execute `pulumi stack init <stack name>` in terminal
-6. execute `pulumi preview --json` in terminal (optional)
-7. execute `pulumi up --yes` in terminal
+```bash
+# Port-forward Envoy Gateway
+kubectl -n envoy-gw port-forward svc/envoy-api-gw 8000:80
 
-### How to access kubernetes dashboard
+# Access sample apps
+curl localhost:8000/web-app-svc
+curl localhost:8000/web-app-knative-svc
 
-1. Get monitoring-user access token
-   with `kubectl get secret monitoring-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d`
-2. Start port forwarding
-   with `kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
-3. Open localhost:8443 on a web browser
-4. Enter bearer access token in dashboard login
+# Get Headlamp token
+sh headlamp/get-token.sh
 
-### Deploy web services
+# Access Headlamp via:
+curl localhost:8000/headlamp
+```
 
-1. Navigate into `iac/app-deployment`
-2. execute `pulumi install --local` in terminal
-3. execute `pulumi install` in terminal
-4. execute `export PULUMI_CONFIG_PASSPHRASE=<your passphrase>` in terminal
-5. execute `pulumi stack init <stack name>` in terminal
-6. execute `pulumi preview --json` in terminal (optional)
-7. execute `pulumi up --yes` in terminal
+## 🧰 Prerequisites
 
-### Cleaning Up
+- Bash terminal  
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)  
+- [Docker](https://www.docker.com/)  
+- [Minikube](https://minikube.sigs.k8s.io/docs/)  
+- [Helm](https://helm.sh/)  
 
-**For deleting web services:**
+## 🏁 Quick Start
 
-1. Navigate into `iac/app-deployment`
-2. Execute `export PULUMI_CONFIG_PASSPHRASE=<your passphrase>` in terminal
-3. Execute `pulumi destroy --yes` in terminal
+```bash
+sh setup.sh
+```
 
-**For deleting Kubernetes dashboard:**
+## 🧹 Clean Up
 
-1. Navigate into `iac/k8s-dashboard`
-2. Execute `export PULUMI_CONFIG_PASSPHRASE=<your passphrase>` in terminal
-3. Execute `pulumi destroy --yes` in terminal
+```bash
+sh clean-up.sh
+```
 
-**For deleting local cluster (Optional):**
+## 📁 Key File Descriptions
 
-Execute `kind delete cluster --name simple-k8s` in terminal
+### `app-deployment/`
+- **app-deployment.yaml:**
+  - Kubernetes Deployment for the sample application
+  - Kubernetes objects defined in this file are:
+    - Deployment: `web-app-deploy`
+    - Service: `web-app-svc`
+    - Http Route: `web-app-http-route`
+  - Both deployments are used [dilankarathnasiri/simple-web-server](https://hub.docker.com/r/dilankarathnasiri/simple-web-server) docker image from [Simple Utils
+GitHub repo](https://github.com/dilanka-rathnasiri/simple-utils)
+- **app-ksvc.yaml:**
+  - Knative serverless deployment for the sample application
+  - Kubernetes objects defined in this file are:
+    - Knative service: `web-app-knative-svc`
+    - Http Route: `web-app-knative-http-route`
+- **app-ns.yaml:**
+  - Defines `app` namespace
+  - All the application related resources except Http Routes are defined in `app` namespace
+  - Http Routes are defined in `envoy-gw` namespace
+- **app-reference-grant.yaml:**
+  - `envoy-app-reference-grant` reference grant to allow traffic from envoy gateway to services in the app namespace
+- **deploy-app.sh:**
+  - Bash script to deploy sample applications
+- **remove-app.sh:**
+  - Bash script to remove deployed applications
+
+### `envoy-gw/`
+- **config-envoy-gw.yaml:**
+  - Configuration for Envoy Gateway and related resources
+  - Kubernetes objects defined in this file are:
+    - Gateway Class: `envoy-gw`
+    - Envoy Proxy: `envoy-gw-proxy-config`
+    - Gateway: `envoy-gw`
+    - HTTP Route Filter: `health-inline-response`
+    - HTTP Route: `health-route` for health checks
+    - HTTP Route Filter: `default-inline-response`
+    - HTTP Route: `default-route` for when no matching route is found
+- **envoy-gw-ns.yaml:**
+  - Defines `envoy-gw` namespace
+  - All the envoy gateway related resources and Http Routes are defined in `envoy-gw` namespace
+- **install-envoy-gw.sh:**
+  - Bash script to install and configure Envoy Gateway
+- **remove-envoy-gw.sh:**
+  - Bash script to uninstall Envoy Gateway and clean up resources
+
+### `headlamp/`
+- **headlamp-http-route.yaml:**
+  - Define `headlamp-http-route`
+- **headlamp-ns.yaml:**
+  - Defines `headlamp` namespace
+  - All the headlamp related resources are defined in `headlamp` namespace
+- **headlamp-reference-grant.yaml:**
+  - `envoy-headlamp-reference-grant` reference grant to allow traffic from envoy gateway to headlamp
+- **install-headlamp.sh:**
+  - Bash script to install and configure Headlamp dashboard
+- **remove-headlamp.sh:**
+  - Bash script to uninstall Headlamp and clean up resources
+- **get-token.sh:**
+  - Helper script to obtain authentication token for Headlamp dashboard
+  - Creates and displays a service account token
+- **values.yaml:**
+  - Helm values configuration for Headlamp
+  - Configures the base URL to `/headlamp`
+
+### `knative/`
+- **knative-configs.yaml:**
+  - Configuration for Knative Serving with Kourier as the ingress
+  - Disables Istio and enables Kourier with ClusterIP service type as the default ingress for Knative Serving
+  - Configures the default domain settings
+- **knative-ns.yaml:**
+  - Defines Kubernetes namespaces for Knative components:
+    - `knative-operator`: For the Knative Operator
+    - `knative-serving`: For Knative Serving components
+- **kourier-reference-grant.yaml:**
+  - `envoy-kourier-reference-grant` reference grant to allow traffic from envoy gateway to kourier
+- **install-knative.sh:**
+  - Bash script to install and configure Knative Serving with Kourier
+  - Sets up the Knative Operator and applies the serving configuration
+  - Waits for Kourier gateway to be ready
+- **remove-knative.sh:**
+  - Bash script to uninstall Knative and clean up resources
+- **kourier-wait/:**
+  - Contains a Python script that waits for Kourier gateway to be ready
+  - Used internally by the `install-knative.sh`
+
+### `minikube/`
+
+- **start-minikube.sh:**
+  - Bash script to start a local Minikube cluster
+- **delete-minikube.sh:**
+  - Bash script to delete the local Minikube cluster

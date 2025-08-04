@@ -12,6 +12,10 @@ echo "******* install knative *******"
 cd ../knative
 sh install-knative.sh
 
+echo "******* install headlamp *******"
+cd ../headlamp
+sh install-headlamp.sh
+
 echo "******* deploy web app *******"
 cd ../app-deployment
 sh deploy-app.sh

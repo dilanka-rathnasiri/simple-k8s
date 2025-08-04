@@ -1,0 +1,28 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: headlamp-http-route
+  namespace: envoy-gw
+spec:
+  parentRefs:
+    - name: envoy-gw
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: "/headlamp"
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: "/headlamp/"
+      backendRefs: &headlamp-backend
+        - name: headlamp
+          port: 80
+          namespace: headlamp
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/headlamp"
+      backendRefs: *headlamp-backend
