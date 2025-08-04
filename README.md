@@ -1,6 +1,6 @@
 # Simple K8s
 
-A minimal, [Kubernetes](https://kubernetes.io/) cluster setup using Minikube to demonstrate essential tools for modern cloud native app development and deployment
+A minimal [Kubernetes](https://kubernetes.io/) cluster setup using Minikube to demonstrate essential tools for modern cloud native app development and deployment
 
 ## 🚀 Stack Overview
 
